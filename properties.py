@@ -20,7 +20,7 @@ class Costanti:
     eseguire il programma."""
 
     # costanti dipendenti dal fantacampionato
-    NUM_SQUADRE = 4
+    NUM_SQUADRE = 10
     NUM_GIRONI = 4
     NUM_GIORNATE = (NUM_SQUADRE - 1) * NUM_GIRONI
     ULTIMA_GIORNATA = NUM_GIORNATE
