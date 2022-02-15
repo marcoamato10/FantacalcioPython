@@ -143,16 +143,16 @@ class Calendario(object):
         """Stampa il calendario"""
         n_giornata = 1
         for giornata_custom in self.calendario_custom:
-            print 'Giornata {}'.format(str(n_giornata))
+            print ('Giornata {}'.format(str(n_giornata)))
             for i in xrange(0, Costanti.NUM_SQUADRE, 2):
-                print '{} - {}'.format(str(giornata_custom[i][:3]), str(giornata_custom[i+1][:3]))
+                print ('{} - {}'.format(str(giornata_custom[i][:3]), str(giornata_custom[i+1][:3])))
             print
             n_giornata += 1
                 
     def print_classifica(self):
         """Stampa la classifica"""
         for squadra, punti in sorted(self.classifica.iteritems(), key=lambda (k, v): (v, k), reverse=True):
-            print '{} \t\t {}'.format(squadra, str(punti))
+            print ('{} \t\t {}'.format(squadra, str(punti)))
 
     @staticmethod
     def converti_punti_gol(pti):
