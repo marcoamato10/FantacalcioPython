@@ -8,7 +8,7 @@ def genera_girone_segnaposti(squadre):
 
     rotation = list(squadre)
     giornate = []
-    for i in xrange(0, len(squadre)-1):
+    for i in range(0, len(squadre)-1):
         giornate.append(rotation)
         rotation = [rotation[0]] + [rotation[-1]] + rotation[1:-1]
     return giornate
@@ -40,7 +40,7 @@ class Costanti:
     CALENDARIO_SEGNAPOSTI_COMPLETO = CALENDARIO_SEGNAPOSTI * NUM_GIRONI
     
     # soglie punti-gol"""
-    SOGLIE_PUNTI_GOL = xrange(66, 186, 6)
+    SOGLIE_PUNTI_GOL = range(66, 186, 6)
     
     # costanti per la classifica
     PTI_V = 3

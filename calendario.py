@@ -1,3 +1,5 @@
+from sympy import im
+from sympy.abc import x, y
 from sympy.functions.elementary.complexes import im
 
 from properties import Costanti
@@ -8,7 +10,7 @@ from collections import Counter
 class Calendario(object):
     """Classe per gestire un calendario
     Comprende il calcolo della classifica per tutte le partite giocate"""
-    
+
     def __init__(self, permutation, giornate):
         self.permutation = permutation
         self.giornate = giornate
@@ -18,7 +20,8 @@ class Calendario(object):
         self.pti_primo = 0
         self.squadre_campioni = []
         for segnaposti_giornata in Costanti.CALENDARIO_SEGNAPOSTI_COMPLETO:
-            segnaposti_giornata_custom = [Costanti.SEGNAPOSTO]*Costanti.NUM_SQUADRE
+            segnaposti_giornata_custom = [
+                Costanti.SEGNAPOSTO]*Costanti.NUM_SQUADRE
             for ind, segnaposto in enumerate(segnaposti_giornata):
                 segnaposti_giornata_custom[ind] = self.diz_segnaposti[segnaposto]
             self.calendario_custom.append(segnaposti_giornata_custom)
@@ -31,7 +34,7 @@ class Calendario(object):
     @permutation.setter
     def permutation(self, permutation):
         self.__permutation = permutation
-    
+
     @property
     def giornate(self):
         """Lista di oggeti Giornata che compongono il Calendario"""
@@ -69,7 +72,7 @@ class Calendario(object):
         La lista-elemento contiene l'elenco    delle squadre partecipanti 
         in 'ordine di match':
         es. TeamA vs TeamB, TeamC vs TeamD
-            [TeamA, TeamB, TeamC, TeamD]"""        
+            [TeamA, TeamB, TeamC, TeamD]"""
         return self.__calendario_custom
 
     @calendario_custom.setter
@@ -102,28 +105,30 @@ class Calendario(object):
             return [' / '.join(self.squadre_campioni) + Costanti.SEPARATOR + str(self.pti_primo)]
         else:
             return [sc + Costanti.SEPARATOR + str(self.pti_primo) for sc in self.squadre_campioni]
-    
+
     def calcola_classifica(self, ultima_giornata=Costanti.ULTIMA_GIORNATA):
         """Calcola la classifica fino alla giornata numero 'ultima_giornata'
         per tutte le giornate con flag 'giocata'=True"""
         for g in self.giornate[:ultima_giornata]:
             if g.giocata:
                 self.calcola_giornata(g)
-                self.classifica = dict(Counter(g.squadre_pti_classifica) + Counter(self.classifica))
+                self.classifica = dict(
+                    Counter(g.squadre_pti_classifica) + Counter(self.classifica))
         self.pti_primo = max(self.classifica.values())
-        self.squadre_campioni = [k for k, v in self.classifica.iteritems() if v == self.pti_primo]
+        self.squadre_campioni = [
+            k for k, v in self.classifica.iteritems() if v == self.pti_primo]
         self.squadre_campioni.sort()
-        
+
     def calcola_giornata(self, giornata):
         """Calcola tutte le partite della giornata
         attribuendo i punti vittoria, pareggio o sconfitta alle squadre"""
         scontri_giornata = self.calendario_custom[giornata.n_giornata-1]
-        for indx in xrange(0, len(scontri_giornata), 2):
+        for indx in range(0, len(scontri_giornata), 2):
             [pti_casa, pti_fuori] = self.calcola_partita(giornata.squadre_pti[scontri_giornata[indx]],
                                                          giornata.squadre_pti[scontri_giornata[indx+1]])
             giornata.squadre_pti_classifica[scontri_giornata[indx]] = pti_casa
-            giornata.squadre_pti_classifica[scontri_giornata[indx+1]] = pti_fuori     
-              
+            giornata.squadre_pti_classifica[scontri_giornata[indx+1]] = pti_fuori
+
     def calcola_partita(self, pti_casa, pti_fuori):
         """Calcola i gol di una partita confrontando pti_casa e pti_fuori"""
         gol_casa = self.converti_punti_gol(pti_casa)
@@ -133,26 +138,27 @@ class Calendario(object):
         elif gol_casa < gol_fuori:
             return [Costanti.PTI_S, Costanti.PTI_V]
         else:
-            return [Costanti.PTI_P, Costanti.PTI_P]        
+            return [Costanti.PTI_P, Costanti.PTI_P]
 
     def get_squadre(self):
         """Restituisce la lista delle squadri partecipanti prendendola dalla prima giornata"""
         return self.giornate[0].squadre
-    
+
     def print_calendario(self):
         """Stampa il calendario"""
         n_giornata = 1
         for giornata_custom in self.calendario_custom:
-            print ('Giornata {}'.format(str(n_giornata)))
-            for i in xrange(0, Costanti.NUM_SQUADRE, 2):
-                print ('{} - {}'.format(str(giornata_custom[i][:3]), str(giornata_custom[i+1][:3])))
+            print('Giornata {}'.format(str(n_giornata)))
+            for i in range(0, Costanti.NUM_SQUADRE, 2):
+                print(
+                    '{} - {}'.format(str(giornata_custom[i][:3]), str(giornata_custom[i+1][:3])))
             print
             n_giornata += 1
-                
+
     def print_classifica(self):
         """Stampa la classifica"""
-        for squadra, punti in sorted(self.classifica.iteritems(), key=lambda (k, v): (v, k), reverse=True):
-            print ('{} \t\t {}'.format(squadra, str(punti)))
+        for squadra, punti in sorted(self.classifica.iteritems(), key=lambda k, v: (v, k), reverse=True):
+            print('{} \t\t {}'.format(squadra, str(punti)))
 
     @staticmethod
     def converti_punti_gol(pti):

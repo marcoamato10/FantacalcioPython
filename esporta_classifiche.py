@@ -3,6 +3,7 @@ import time
 import itertools
 import openpyxl as xl
 import utils
+import functools
 from multiprocessing import Pool
 from collections import Counter
 from properties import Costanti
@@ -17,7 +18,7 @@ def main(filename="Calendario.xlsx"):
     stampa la classifica dei calendari vinti dalle singole squadre, al variare dei punti in classifica"""
     
     starting_time = time.time()
-    giornate = [Giornata(n) for n in xrange(1, Costanti.NUM_GIORNATE+1)]
+    giornate = [Giornata(n) for n in range(1, Costanti.NUM_GIORNATE+1)]
     try:        
         calendario_xl = xl.load_workbook(filename)
     except Exception as e:
@@ -26,7 +27,7 @@ def main(filename="Calendario.xlsx"):
         print (sys.exc_info()[0])
     else:
         print ('Letto il file {}'.format(filename))
-        calendario_sheet = calendario_xl.get_active_sheet()
+        calendario_sheet = calendario_xl.active
         squadre = utils.get_squadre_calendario(calendario_sheet)
         utils.set_giornate_calendario(calendario_sheet, giornate, squadre)
         all_permutations = list(itertools.permutations(squadre))
@@ -48,7 +49,7 @@ def calcola_classifiche_distribuito(squadre, giornate, all_permutations, startin
     print ('\tmap...')
     classifiche = pool.map(calcola_classifica_distribuito_map, calendari)
     print ('\treduce...')
-    classifica_calendari = reduce(calcola_classifica_distribuito_reduce, classifiche)
+    classifica_calendari = functools.reduce(calcola_classifica_distribuito_reduce, classifiche)
     utils.esporta_classifica_csv(classifica_calendari)
     ending_time = time.time()
     print ('Tempo impiegato per elaborazione: {0:.2f} s'.format(ending_time - initialization_time))

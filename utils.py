@@ -6,10 +6,10 @@ def get_squadre_calendario(sheet):
     """Metodo per la ricerca dei nomi delle squadre partecipanti
     all'interno del blocco della prima giornata di campionato"""
     squadre = []
-    for i in xrange(Costanti.NUM_SQUADRE/2):
+    for i in range(Costanti.NUM_SQUADRE/2):
         squadre.append(sheet[Costanti.FIRST_LETTER_EVN + str(Costanti.STARTING_NUMBER + i)].value)
         squadre.append(sheet[Costanti.LAST_LETTER_EVN + str(Costanti.STARTING_NUMBER + i)].value)
-    return squadre   
+    return squadre 
 
 
 def set_giornate_calendario(sheet, giornate, squadre):
